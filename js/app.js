@@ -308,10 +308,54 @@ function initTabs() {
   });
 }
 
+// Dark Mode
+function initDarkMode() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let currentTheme = localStorage.getItem('theme');
+
+    if (!currentTheme) {
+        currentTheme = userPrefersDark ? 'dark' : 'light';
+    }
+
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', () => {
+            let newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
+}
+
+// Font Size
+function initFontSize() {
+    const increaseFontSizeBtn = document.getElementById('increaseFontSize');
+    const fontSizes = ['16px', '18px', '20px'];
+    let currentSize = localStorage.getItem('fontSize') || fontSizes[0];
+
+    document.documentElement.style.fontSize = currentSize;
+
+    if (increaseFontSizeBtn) {
+        increaseFontSizeBtn.addEventListener('click', () => {
+            let currentIndex = fontSizes.indexOf(currentSize);
+            let nextIndex = (currentIndex + 1) % fontSizes.length;
+            let newSize = fontSizes[nextIndex];
+            document.documentElement.style.fontSize = newSize;
+            localStorage.setItem('fontSize', newSize);
+            currentSize = newSize;
+        });
+    }
+}
+
+
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
   checkAuth();
   initTabs();
+  initDarkMode();
+  initFontSize();
 });
 
 // Export for use in other files
@@ -329,4 +373,6 @@ window.RecoveryConnect = {
   getCurrentUser,
   showToast,
   initTabs,
+  initDarkMode,
+  initFontSize,
 };
